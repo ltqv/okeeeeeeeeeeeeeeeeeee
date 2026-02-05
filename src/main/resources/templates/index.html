@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheXuong - Thể Thao Đích Thực</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid px-5">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-uppercase" th:href="@{/}">
+            <img src="/img/logo.png" th:src="@{/img/logo.png}" alt="Logo" width="45" height="45" class="me-2">
+            <span class="brand-text">THE XUONG</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown custom-dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold text-white" href="#" id="sportDropdown">
+                        THỂ THAO
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-glass">
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Bóng đá')}"><i class="fa-solid fa-futbol me-2"></i>Bóng đá</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Cầu lông')}"><i class="fa-solid fa-feather me-2"></i>Cầu lông</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Chạy bộ')}"><i class="fa-solid fa-person-running me-2"></i>Chạy bộ</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Bóng rổ')}"><i class="fa-solid fa-basketball me-2"></i>Bóng rổ</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Pickleball')}"><i class="fa-solid fa-table-tennis-paddle-ball me-2"></i>Pickleball</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Khác')}">Khác...</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products}">Tất cả...</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown custom-dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold text-white" href="#" id="brandDropdown">
+                        THƯƠNG HIỆU
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-glass">
+                        <li><a class="dropdown-item" th:href="@{/products(brand='Nike')}">Nike</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(brand='Adidas')}">Adidas</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(brand='Li-Ning')}">Li-Ning</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(brand='Asics')}">Asics</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(brand='Puma')}">Puma</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products(sport='Khác')}">Khác...</a></li>
+                        <li><a class="dropdown-item" th:href="@{/products}">Tất cả...</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-white" th:href="@{/products}">
+                        TẤT CẢ SẢN PHẨM <span class="badge bg-danger ms-1" style="font-size: 0.6rem;">HOT</span>
+                    </a>
+                </li>
+            </ul>
+
+            <form class="d-flex mx-auto search-form position-relative" role="search" style="width: 350px;"
+                  th:action="@{/products}" method="get">
+                <input class="form-control search-input" type="search" name="keyword"
+                       placeholder="Tìm tên sản phẩm..." aria-label="Search" th:value="${keyword}">
+                <button class="btn search-btn position-absolute end-0 top-0 h-100" type="submit">
+                    <i class="fa-solid fa-magnifying-glass text-white"></i>
+                </button>
+            </form>
+
+            <ul class="navbar-nav ms-auto align-items-center gap-3">
+
+                <li class="nav-item position-relative">
+                    <a class="nav-link text-white" th:href="@{/cart}" style="font-size: 1.2rem;">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                              style="font-size: 0.6rem;"
+                              th:text="${cartCount != null ? cartCount : 0}">0</span>
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown custom-dropdown">
+                    <a sec:authorize="!isAuthenticated()" class="nav-link text-white fw-bold" th:href="@{/login}">
+                        <i class="fa-solid fa-user me-1"></i> Đăng nhập
+                    </a>
+
+                    <a sec:authorize="isAuthenticated()" class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fa-solid fa-user"></i> <span sec:authentication="name">User</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-glass dropdown-menu-end" sec:authorize="isAuthenticated()">
+                        <li><a class="dropdown-item" href="#">Hồ sơ cá nhân</a></li>
+                        <li><a class="dropdown-item" th:href="@{/my-orders}">Đơn hàng của tôi</a></li>
+
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <hr class="dropdown-divider">
+                            <h6 class="dropdown-header text-warning fw-bold">QUẢN TRỊ</h6>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a class="dropdown-item" th:href="@{/admin/products}">
+                                <i class="fa-solid fa-box me-2"></i>Quản lý Sản phẩm
+                            </a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a class="dropdown-item" th:href="@{/admin/orders}">
+                                <i class="fa-solid fa-clipboard-list me-2"></i>Quản lý Đơn hàng
+                            </a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a class="dropdown-item" th:href="@{/admin/dashboard}">
+                                <i class="fa-solid fa-chart-line me-2"></i>Xem Thống kê
+                            </a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a class="dropdown-item" th:href="@{/admin/users}">
+                                <i class="fa-solid fa-users-gear me-2"></i>Quản lý Người dùng
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-inner rounded shadow-sm">
+        <div class="carousel-item active" data-bs-interval="3000">
+            <img src="https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1920&auto=format&fit=crop" class="d-block w-100 hero-img" alt="Bóng đá">
+        </div>
+        <div class="carousel-item" data-bs-interval="3000">
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1920&auto=format&fit=crop" class="d-block w-100 hero-img" alt="Gym">
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-3" th:each="prod : ${products}">
+            <div class="card h-100 shadow-sm product-card">
+                <img th:src="${prod.imageUrl}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-truncate" th:text="${prod.name}">Tên SP</h5>
+                    <p class="fw-bold mb-auto" th:text="${#numbers.formatDecimal(prod.price, 0, 'POINT', 0, 'COMMA')} + ' đ'"></p>
+                    <a th:href="@{/product-detail/{id}(id=${prod.id})}" class="btn btn-outline-light w-100 mt-3">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

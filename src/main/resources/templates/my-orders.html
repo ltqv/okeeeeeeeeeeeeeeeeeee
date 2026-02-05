@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi - TheXuong</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid px-5">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-uppercase" th:href="@{/}">
+            <img src="/img/logo.png" th:src="@{/img/logo.png}" alt="Logo" width="45" height="45" class="me-2">
+            <span class="brand-text">THE XUONG</span>
+        </a>
+        <div class="ms-auto">
+            <a class="btn btn-outline-light btn-sm" th:href="@{/products}">
+                <i class="fa-solid fa-bag-shopping me-1"></i>Tiếp tục mua sắm
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container py-4">
+    <h3 class="fw-bold mb-3">Đơn hàng của tôi</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Người nhận</th>
+                        <th>Tổng tiền</th>
+                        <th>Thanh toán</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="o : ${orders}">
+                        <td th:text="${o.id}">1</td>
+                        <td>
+                            <div th:text="${o.fullName}">Tên</div>
+                            <small class="text-muted" th:text="${o.phoneNumber}"></small>
+                        </td>
+                        <td th:text="${o.totalMoney != null ? #numbers.formatDecimal(o.totalMoney, 0, 'POINT', 0, 'COMMA') + ' đ' : ''}"></td>
+                        <td th:text="${o.paymentMethod}">COD</td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${o.status == 'DELIVERED'} ? 'bg-success' :
+                                  (o.status == 'SHIPPING' ? 'bg-primary' :
+                                  (o.status == 'CANCELLED' ? 'bg-danger' : 'bg-secondary'))"
+                                  th:text="${o.status}">PENDING</span>
+                        </td>
+                        <td th:text="${o.createdAt != null ? #temporals.format(o.createdAt, 'dd/MM/yyyy HH:mm') : ''}">
+                            01/01/2026
+                        </td>
+                    </tr>
+                    <tr th:if="${orders == null || orders.isEmpty()}">
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Bạn chưa có đơn hàng nào.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
